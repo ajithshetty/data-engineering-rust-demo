@@ -1,0 +1,11 @@
+[package]
+name = "rusty-simple-delta"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+deltalake = { version = "0.6.0", features = ["arrow", "parquet", "datafusion-ext"] }
+tokio = "1.23.0"
+arrow = "28"

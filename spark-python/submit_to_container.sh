@@ -1,0 +1,1 @@
+docker-compose exec spark-master-delta sh /opt/apps/submit_job.sh

@@ -1,0 +1,83 @@
+version: '2'
+services:
+  spark-master:
+    build: .
+    hostname: spark-master
+    container_name: spark-master-delta
+    ports:
+      - "9090:8080"
+      - "7077:7077"
+    environment:
+      - SPARK_LOCAL_IP=spark-master
+      - SPARK_WORKLOAD=master
+    volumes:
+      - ./spark-python/apps:/opt/apps
+      - ./rust-aws-demo:/opt/rust-aws-demo
+      - ./buckets/delta:/opt/delta
+
+  spark-worker-1:
+    build: .
+    hostname: spark-worker-1
+    container_name: spark-worker-1-delta
+    ports:
+      - "9091:8080"
+      - "7000:7000"
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_WORKER_CORES=4
+      - SPARK_WORKER_MEMORY=2G
+      - SPARK_DRIVER_MEMORY=2G
+      - SPARK_EXECUTOR_MEMORY=2G
+      - SPARK_WORKLOAD=worker
+      - SPARK_LOCAL_IP=spark-worker-1
+    volumes:
+      - ./spark-python/apps:/opt/apps
+      - ./buckets/delta:/opt/delta
+      - ./rust-aws-demo:/opt/rust-aws-demo
+
+  spark-worker-2:
+    build: .
+    hostname: spark-worker-2
+    container_name: spark-worker-2-delta
+    ports:
+      - "39091:8080"
+      - "27000:7000"
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_WORKER_CORES=4
+      - SPARK_WORKER_MEMORY=2G
+      - SPARK_DRIVER_MEMORY=2G
+      - SPARK_EXECUTOR_MEMORY=2G
+      - SPARK_WORKLOAD=worker
+      - SPARK_LOCAL_IP=spark-worker-2
+    volumes:
+      - ./spark-python/apps:/opt/apps
+      - ./buckets/delta:/opt/delta
+      - ./rust-aws-demo:/opt/rust-aws-demo
+
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./buckets:/data
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server --console-address ":9001" /data
+
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin;
+      /usr/bin/mc mb myminio/delta;
+      exit 0
+      "

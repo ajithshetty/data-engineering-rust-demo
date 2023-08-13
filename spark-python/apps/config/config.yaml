@@ -1,0 +1,6 @@
+spark: unprocessed
+destination_format: json
+s3:
+  url: http://minio:9000
+  access_key: minioadmin
+  secret_key: minioadmin

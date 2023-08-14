@@ -2,3 +2,4 @@
 /rusty-simple-delta/target
 /rust-aws-demo/target
 /buckets
+.DS_Store

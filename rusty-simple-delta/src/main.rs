@@ -59,11 +59,12 @@ async fn append_to_table(path: String,batch: RecordBatch) -> DeltaTable {
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
-    let table = create_table("file:/my/given/path/data-engineering-rust-demo/rusty-simple-delta/data/simple-table").await;
+    let tablepath: &str="file:/my/given/path/data-engineering-rust-demo/rusty-simple-delta/data/simple-table";
+    let table = create_table(tablepath).await;
     println!("Table created with version : {}", table.version());
 
     let batch = create_batch();
-    let table = append_to_table("file:/my/given/path/data-engineering-rust-demo/rusty-simple-delta/data/simple-table".to_string(), batch).await;
+    let table = append_to_table(tablepath.to_string(), batch).await;
     println!("Data inserted with version : {}", table.version());
     
 }

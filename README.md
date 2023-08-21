@@ -3,7 +3,7 @@
 
 Welcome to Data Enginnering Rust with Delta lake demo.
 
-![alt text](delta-rs.png)
+![alt text](assets/delta-rs.png)
 
 More details in the [Medium Blog](https://ajithshetty28.medium.com/delta-and-rust-new-in-town-ebe6dd012da8)
 ## Target Audience
